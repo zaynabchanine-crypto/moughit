@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dossier Secret — Moughit</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #050505;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+.screen {
+    min-height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+}
+
+.screen.active {
+    display: flex;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+}
+
+/* TERMINAL */
+
+.terminal {
+    background: #000;
+    border: 1px solid #00ff88;
+    box-shadow: 0 0 30px rgba(0,255,136,0.25);
+    border-radius: 10px;
+    padding: 30px;
+    text-align: left;
+    font-family: monospace;
+}
+
+.terminal-title {
+    color: #00ff88;
+    margin-bottom: 25px;
+    font-size: 18px;
+}
+
+.terminal-line {
+    color: #baffd9;
+    margin: 13px 0;
+}
+
+.warning {
+    color: #ff4444;
+}
+
+.subject {
+    color: #00ff88;
+    font-size: 20px;
+}
+
+.open-btn {
+    margin-top: 25px;
+    padding: 15px 25px;
+    background: transparent;
+    color: #00ff88;
+    border: 1px solid #00ff88;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.open-btn:hover {
+    background: #00ff88;
+    color: black;
+    box-shadow: 0 0 20px #00ff88;
+}
+
+/* DOSSIER */
+
+.dossier {
+    background: #101010;
+    border: 1px solid #ff3366;
+    border-radius: 15px;
+    padding: 35px;
+    box-shadow: 0 0 35px rgba(255,51,102,0.2);
+}
+
+h1 {
+    color: #ff3366;
+    margin-top: 0;
+}
+
+.subtitle {
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+.evidence {
+    background: #181818;
+    border-left: 4px solid #ff3366;
+    padding: 20px;
+    margin: 15px 0;
+    text-align: left;
+    border-radius: 8px;
+    opacity: 0;
+    transform: translateX(-30px);
+    animation: evidenceAppear 0.7s forwards;
+}
+
+.evidence:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.evidence:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+.evidence:nth-child(4) {
+    animation-delay: 0.9s;
+}
+
+.evidence:nth-child(5) {
+    animation-delay: 1.2s;
+}
+
+@keyframes evidenceAppear {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.evidence-number {
+    color: #ff3366;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.evidence-text {
+    line-height: 1.6;
+}
+
+.continue-btn {
+    margin-top: 25px;
+    padding: 14px 25px;
+    border: none;
+    background: #ff3366;
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.continue-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255,51,102,0.5);
+}
+
+/* QUESTIONS */
+
+.question-box {
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 15px;
+    padding: 35px;
+    width: 100%;
+    max-width: 700px;
+    box-shadow: 0 0 30px rgba(255,255,255,0.05);
+}
+
+.question-number {
+    color: #ff3366;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.question {
+    font-size: 25px;
+    line-height: 1.4;
+    margin-bottom: 30px;
+}
+
+.answer {
+    display: block;
+    width: 100%;
+    margin: 12px 0;
+    padding: 16px;
+    background: #1b1b1b;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.25s;
+}
+
+.answer:hover {
+    border-color: #ff3366;
+    transform: translateX(5px);
+}
+
+.correct {
+    border-color: #00ff88 !important;
+    background: rgba(0,255,136,0.1) !important;
+}
+
+.wrong {
+    border-color: #ff3333 !important;
+    background: rgba(255,0,0,0.1) !important;
+}
+
+.message {
+    min-height: 25px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+/* FINAL */
+
+.final-box {
+    text-align: center;
+    max-width: 750px;
+}
+
+.final-title {
+    font-size: 42px;
+    color: #ff3366;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.verdict {
+    background: #151515;
+    border: 2px solid #ff3366;
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 25px;
+}
+
+.verdict-title {
+    color: #aaa;
+    letter-spacing: 3px;
+}
+
+.condemned {
+    font-size: 32px;
+    color: #ff3366;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.years {
+    font-size: 45px;
+    color: white;
+    font-weight: bold;
+}
+
+.premium {
+    margin-top: 30px;
+    background: linear-gradient(135deg, #ff3366, #8b1e3f);
+    border-radius: 15px;
+    padding: 25px;
+}
+
+.premium h2 {
+    margin-top: 0;
+}
+
+.premium p {
+    margin: 12px;
+}
+
+.love-counter {
+    margin-top: 30px;
+    font-size: 22px;
+}
+
+.counter {
+    font-size: 55px;
+    color: #ff3366;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.love-message {
+    font-size: 35px;
+    color: #ff3366;
+    margin-top: 30px;
+    font-weight: bold;
+}
+
+.small-message {
+    color: #ccc;
+    line-height: 1.8;
+    font-size: 17px;
+}
+
+/* NO BUTTON */
+
+.no-button {
+    position: relative;
+}
+
+/* HEARTS */
+
+.heart {
+    position: fixed;
+    bottom: -30px;
+    font-size: 25px;
+    animation: floatHeart 5s linear forwards;
+    pointer-events: none;
+}
+
+@keyframes floatHeart {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- ================= TERMINAL ================= -->
+
+<section id="screen1" class="screen active">
+
+<div class="container">
+
+<div class="terminal">
+
+<div class="terminal-title">
+SYSTEM TERMINAL — SECURE CONNECTION
+</div>
+
+<div class="terminal-line">
+&gt; Initialisation...
+</div>
+
+<div class="terminal-line">
+&gt; Connexion à la base de données...
+</div>
+
+<div class="terminal-line">
+&gt; Analyse du sujet...
+</div>
+
+<div class="terminal-line subject">
+&gt; Sujet identifié : MOUGHIT
+</div>
+
+<div class="terminal-line warning">
+&gt; Niveau de danger : ÉLEVÉ ⚠️
+</div>
+
+<div class="terminal-line">
+&gt; Motif de l'enquête :
+</div>
+
+<div class="terminal-line">
+Vol répété du cœur d'une certaine Zaynab ❤️
+</div>
+
+<button class="open-btn" onclick="showScreen('screen2')">
+🔐 OUVRIR LE DOSSIER
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= DOSSIER ================= -->
+
+<section id="screen2" class="screen">
+
+<div class="container">
+
+<div class="dossier">
+
+<h1>🕵️ DOSSIER SECRET</h1>
+
+<div class="subtitle">
+Affaire n° 24-05-ZAYNAB
+</div>
+
+
+<div class="evidence">
+
+<div class="evidence-number">
+PREUVE N°01 — CAS EXTRÊMEMENT SUSPECT 🚨
+</div>
+
+<div class="evidence-text">
+
+Le suspect <strong>Moughit</strong> a réussi à devenir
+la personne à qui Zaynab pense même quand elle
+essaie de ne pas penser à lui. 😂
+
+<br><br>
+
+<strong>Niveau de danger : 99,9%</strong>
+
+</div>
+
+</div>
+
+
+<div class="evidence">
+
+<div class="evidence-number">
+PREUVE N°02 — RÉCIDIVE CONFIRMÉE 📱
+</div>
+
+<div class="evidence-text">
+
+À chaque fois que son téléphone affiche
+<strong>« Moughit »</strong>, Zaynab regarde son écran
+avec un sourire qu'elle essaie de cacher. 👀❤️
+
+</div>
+
+</div>
+
+
+<div class="evidence">
+
+<div class="evidence-number">
+PREUVE N°03 — SITUATION INCOMPRÉHENSIBLE 🧐
+</div>
+
+<div class="evidence-text">
+
+Moughit peut l'énerver, la faire rire et lui manquer
+<strong>dans la même journée.</strong>
+
+<br><br>
+
+Les enquêteurs n'ont toujours pas compris comment. 😂
+
+</div>
+
+</div>
+
+
+<div class="evidence">
+
+<div class="evidence-number">
+PREUVE N°04 — PREUVE IRRÉFUTABLE ❤️
+</div>
+
+<div class="evidence-text">
+
+Malgré les petites disputes, les
+<strong>« laisse-moi tranquille »</strong> et les moments où
+elle fait semblant d'être fâchée...
+
+<br><br>
+
+<strong>Elle choisit toujours Moughit. ❤️</strong>
+
+</div>
+
+</div>
+
+
+<button class="continue-btn" onclick="showScreen('screen3')">
+
+CONTINUER L'ENQUÊTE →
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= QUESTION 1 ================= -->
+
+<section id="screen3" class="screen">
+
+<div class="question-box">
+
+<div class="question-number">
+QUESTION 01 / 03
+</div>
+
+<div class="question">
+Combien de fois Zaynab pense à toi dans une journée ? 👀
+</div>
+
+
+<button class="answer"
+onclick="checkAnswer(this, false, 'q1message')">
+5 fois
+</button>
+
+<button class="answer"
+onclick="checkAnswer(this, false, 'q1message')">
+20 fois
+</button>
+
+<button class="answer"
+onclick="checkAnswer(this, true, 'q1message')">
+Beaucoup trop pour que ce soit normal 😂
+</button>
+
+
+<div id="q1message" class="message"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= QUESTION 2 ================= -->
+
+<section id="screen4" class="screen">
+
+<div class="question-box">
+
+<div class="question-number">
+QUESTION 02 / 03
+</div>
+
+<div class="question">
+Pourquoi Zaynab t'aime ? ❤️
+</div>
+
+
+<button class="answer"
+onclick="checkAnswer(this, false, 'q2message')">
+Parce que tu es un extraterrestre 👽
+</button>
+
+<button class="answer"
+onclick="checkAnswer(this, false, 'q2message')">
+Parce que tu lui dois 1 million d'euros 💰
+</button>
+
+<button class="answer"
+onclick="checkAnswer(this, true, 'q2message')">
+Parce qu'elle est folle de toi ❤️
+</button>
+
+<button class="answer"
+onclick="checkAnswer(this, false, 'q2message')">
+Parce que tu lui as promis 100 kg de chocolat 🍫
+</button>
+
+
+<div id="q2message" class="message"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= QUESTION 3 ================= -->
+
+<section id="screen5" class="screen">
+
+<div class="question-box">
+
+<div class="question-number">
+QUESTION 03 / 03
+</div>
+
+<div class="question">
+Après analyse de toutes les données...<br><br>
+
+Est-ce que tu comptes rester avec Zaynab longtemps ? 👀
+</div>
+
+
+<button class="answer"
+onclick="showScreen('screen6'); startLoveCounter();">
+❤️ OUI
+</button>
+
+
+<button
+id="noButton"
+class="answer no-button"
+onmouseover="escapeButton()"
+ontouchstart="escapeButton()">
+
+😈 NON
+
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ================= FINAL ================= -->
+
+<section id="screen6" class="screen">
+
+<div class="final-box">
+
+<div class="final-title">
+🎉 DOSSIER CLASSÉ 🎉
+</div>
+
+<p>
+Après analyse approfondie de toutes les preuves...
+</p>
+
+
+<div class="verdict">
+
+<div class="verdict-title">
+VERDICT
+</div>
+
+<div class="condemned">
+TU ES CONDAMNÉ ❤️
+</div>
+
+<p>
+à supporter Zaynab...
+</p>
+
+<div class="years">
+∞ ANNÉES
+</div>
+
+<p>
+Possibilité de libération :
+<strong>0% 😂</strong>
+</p>
+
+</div>
+
+
+<div class="premium">
+
+<h2>
+❤️ ZAYNAB PREMIUM ❤️
+</h2>
+
+<p>✔ Bisous illimités</p>
+
+<p>✔ Messages aléatoires</p>
+
+<p>✔ Petites disputes 😂</p>
+
+<p>✔ « Tu m'aimes ? » × 50 par jour</p>
+
+<p>✔ Beaucoup trop d'amour ❤️</p>
+
+</div>
+
+
+<div class="love-counter">
+
+DOSSIER AMOUR :
+
+<div id="counter" class="counter">
+0
+</div>
+
+</div>
+
+
+<div class="love-message">
+JE T'AIME ❤️
+</div>
+
+
+<div class="small-message">
+
+Même quand tu m'énerves. 😂<br>
+
+Même quand tu as tort. 😌<br>
+
+Même quand tu penses avoir raison alors que tu as tort. 😭
+
+<br><br>
+
+<strong>
+Bref... je te garde quand même. ❤️😂
+</strong>
+
+</div>
+
+</div>
+
+</section>
+
+
+<script>
+
+/* ================= NAVIGATION ================= */
+
+function showScreen(id) {
+
+    document.querySelectorAll(".screen").forEach(function(screen) {
+
+        screen.classList.remove("active");
+
+    });
+
+    document.getElementById(id).classList.add("active");
+
+}
+
+
+/* ================= QUESTIONS ================= */
+
+function checkAnswer(button, correct, messageId) {
+
+    let message = document.getElementById(messageId);
+
+    if (correct) {
+
+        button.classList.add("correct");
+
+        message.style.color = "#00ff88";
+
+        message.innerHTML =
+        "✅ Bonne réponse... évidemment. 😌❤️";
+
+        button.disabled = true;
+
+        setTimeout(function() {
+
+            if (messageId === "q1message") {
+
+                showScreen("screen4");
+
+            }
+
+            else if (messageId === "q2message") {
+
+                showScreen("screen5");
+
+            }
+
+        }, 800);
+
+    }
+
+    else {
+
+        button.classList.add("wrong");
+
+        message.style.color = "#ff4444";
+
+        message.innerHTML =
+        "❌ Mauvaise réponse ! Essaie encore 😂";
+
+        setTimeout(function() {
+
+            button.classList.remove("wrong");
+
+        }, 700);
+
+    }
+
+}
+
+
+/* ================= BOUTON NON ================= */
+
+function escapeButton() {
+
+    let button = document.getElementById("noButton");
+
+    let maxX = window.innerWidth - 180;
+
+    let maxY = window.innerHeight - 100;
+
+    let x = Math.random() * maxX;
+
+    let y = Math.random() * maxY;
+
+    button.style.position = "fixed";
+
+    button.style.left = x + "px";
+
+    button.style.top = y + "px";
+
+}
+
+
+/* ================= COMPTEUR AMOUR ================= */
+
+function startLoveCounter() {
+
+    let counter = document.getElementById("counter");
+
+    let number = 0;
+
+    let interval = setInterval(function() {
+
+        number += Math.floor(Math.random() * 500) + 100;
+
+        counter.innerText = number.toLocaleString();
+
+        if (number >= 100000) {
+
+            clearInterval(interval);
+
+            counter.innerText = "∞";
+
+            createHearts();
+
+        }
+
+    }, 50);
+
+}
+
+
+/* ================= COEURS ================= */
+
+function createHearts() {
+
+    setInterval(function() {
+
+        let heart = document.createElement("div");
+
+        heart.className = "heart";
+
+        heart.innerHTML = ["❤️","💗","💕","💖","💘"][Math.floor(Math.random() * 5)];
+
+        heart.style.left = Math.random() * 100 + "vw";
+
+        heart.style.fontSize =
+        (20 + Math.random() * 25) + "px";
+
+        document.body.appendChild(heart);
+
+        setTimeout(function() {
+
+            heart.remove();
+
+        }, 5000);
+
+    }, 300);
+
+}
+
+</script>
+
+</body>
+</html>
